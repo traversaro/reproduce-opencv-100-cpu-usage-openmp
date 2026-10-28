@@ -52,7 +52,7 @@ def validate(directory, operation, machine=None, environments=("conda", "pypi"))
                 require("opencv-source-" + env in names, f"{stem}: wrong source package")
                 require(not names.intersection({"opencv", "py-opencv", "libopencv"}),
                         f"{stem}: prebuilt OpenCV contaminated source environment")
-                expected = {"pthreads": "pthreads", "openmp": "OpenMP", "tbb": "TBB", "serial": "NO"}[env]
+                expected = {"pthreads": "pthreads", "openmp": "OpenMP", "tbb": "TBB", "serial": "none"}[env]
                 framework = next(line.split(":", 1)[1].strip() for line in build.splitlines()
                                  if "Parallel framework:" in line)
                 require(framework.startswith(expected), f"{stem}: {framework}, expected {expected}")

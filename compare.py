@@ -49,6 +49,10 @@ def main():
                                 if "Parallel framework:" in line), "unknown")
                 rows.append(f"| {env} | {case} | {backend} | {s['cpu_percent']:.1f} | "
                             f"{s['sleep_cpu_percent']:.1f} | {s['peak_os_threads']} | {s['actual_fps']:.1f} |")
+    scope = ("These source builds use common dependency specifications and build options, "
+             "with only the parallel framework selected differently."
+             if set(args.environments) <= {"pthreads", "openmp", "tbb", "serial"}
+             else "This compares packaged stacks; it does not isolate every build/dependency difference.")
     report = ("# OpenCV periodic workload comparison\n\n"
               "CPU percentages use 100% = one logical CPU; values may exceed 100%. "
               "Sleep CPU is process CPU accrued while the calling Python thread sleeps.\n\n"
@@ -57,7 +61,7 @@ def main():
               "High sleep CPU that falls with PASSIVE is evidence of waiting overhead. "
               "Many sleeping OS threads alone do not prove CPU contention. A saturated "
               "image operation or missed target FPS requires a smaller image/lower FPS. "
-              "This compares packaged stacks; it does not isolate every build/dependency difference.\n")
+              + scope + "\n")
     (out / "comparison.md").write_text(report)
     print("\n" + report)
     print("Results:", out)
