@@ -13,6 +13,11 @@ case allocates a deterministic synthetic 1920x1080 BGR image and processes it at
 30 FPS, sleeping between frames. Resize produces a 960x540 image; remap and
 color conversion operate at the source resolution. Output arrays are reused.
 
+For a controlled backend comparison, [source-build/](source-build/README.md)
+uses Pixi Build to compile the same OpenCV release with pthreads, OpenMP, TBB,
+or no parallel framework. All four use one shared build script and common
+dependency specifications. This complements the packaged conda-forge/PyPI test.
+
 ## Quick start
 
 Install [Pixi](https://pixi.prefix.dev/latest/installation/), clone this repository,

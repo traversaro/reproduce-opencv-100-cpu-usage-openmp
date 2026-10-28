@@ -1,0 +1,11 @@
+[package]
+name = "opencv-source-tbb"
+version = "4.13.0"
+
+[package.build.backend]
+name = "pixi-build-rattler-build"
+version = "==0.4.7"
+
+[package.build.config]
+recipe = "recipe.yaml"
+extra-input-globs = ["../build.sh"]

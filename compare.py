@@ -12,6 +12,8 @@ import sys
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--pixi", default=shutil.which("pixi"))
+    p.add_argument("--manifest-path", type=Path)
+    p.add_argument("--environments", nargs="+", default=["conda", "pypi"])
     p.add_argument("--duration", type=float, default=10)
     p.add_argument("--warmup", type=float, default=2)
     p.add_argument("--fps", type=float, default=30)
@@ -24,10 +26,11 @@ def main():
     if not args.pixi:
         p.error("pixi not on PATH; supply --pixi /absolute/path/to/pixi")
     root = Path(__file__).resolve().parent
+    manifest = (args.manifest_path or root / "pixi.toml").resolve()
     out = (args.output_dir or root / "results" / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")).resolve()
     out.mkdir(parents=True, exist_ok=True)
-    for env in ("conda", "pypi"):
-        cmd = [args.pixi, "run", "--locked", "--manifest-path", str(root / "pixi.toml"), "-e", env,
+    for env in args.environments:
+        cmd = [args.pixi, "run", "--locked", "--manifest-path", str(manifest), "-e", env,
                "python", str(root / "repro.py"), "--suite", "--label", env, "--output-dir", str(out)]
         for name in ("duration", "warmup", "fps", "width", "height", "operation"):
             cmd.extend(["--" + name.replace("_", "-"), str(getattr(args, name))])
@@ -35,7 +38,7 @@ def main():
             cmd.append("--include-active")
         subprocess.run(cmd, cwd=root, check=True)
     rows = []
-    for env in ("conda", "pypi"):
+    for env in args.environments:
         for case in ("idle", "default", "single", "passive", "omp1", "active"):
             f = out / f"{env}-{args.operation}-{case}.json"
             if f.exists():

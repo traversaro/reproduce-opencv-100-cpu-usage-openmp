@@ -1,0 +1,42 @@
+[workspace]
+name = "opencv-source-backends"
+version = "0.1.0"
+channels = ["conda-forge"]
+platforms = ["linux-64", "linux-aarch64"]
+preview = ["pixi-build"]
+
+[workspace.build-variants]
+c_compiler_version = ["14"]
+cxx_compiler_version = ["14"]
+
+[dependencies]
+python = "3.11.*"
+numpy = "==2.2.6"
+psutil = "==7.0.0"
+threadpoolctl = "==3.6.0"
+# Install the same backend runtimes in every environment, even when not linked.
+libgomp = "*"
+tbb = "2022.*"
+
+[feature.pthreads.dependencies]
+opencv-source-pthreads = { path = "pthreads" }
+
+[feature.openmp.dependencies]
+opencv-source-openmp = { path = "openmp" }
+
+[feature.tbb.dependencies]
+opencv-source-tbb = { path = "tbb" }
+
+[feature.serial.dependencies]
+opencv-source-serial = { path = "serial" }
+
+[environments]
+pthreads = { features = ["pthreads"], solve-group = "backends" }
+openmp = { features = ["openmp"], solve-group = "backends" }
+tbb = { features = ["tbb"], solve-group = "backends" }
+serial = { features = ["serial"], solve-group = "backends" }
+
+[tasks]
+repro = "python ../repro.py"
+suite = "python ../repro.py --suite"
+compare = "python ../compare.py --manifest-path pixi.toml --environments pthreads openmp tbb serial"

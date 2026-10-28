@@ -12,8 +12,8 @@ def require(condition, message):
         raise ValueError(message)
 
 
-def validate(directory, operation, machine=None):
-    for env in ("conda", "pypi"):
+def validate(directory, operation, machine=None, environments=("conda", "pypi")):
+    for env in environments:
         for case in ("idle", "default", "single", "passive", "omp1"):
             stem = directory / f"{env}-{operation}-{case}"
             data = json.loads(stem.with_suffix(".json").read_text())
@@ -41,13 +41,26 @@ def validate(directory, operation, machine=None):
             if env == "conda":
                 require({"opencv", "libopencv", "py-opencv", "numpy"} <= names,
                         f"{stem}: conda package provenance missing")
-            else:
+            elif env == "pypi":
                 require(not names.intersection({"opencv", "libopencv", "py-opencv", "numpy"}),
                         f"{stem}: conda packages contaminated PyPI environment")
                 require(runtime["python_distributions"].get("opencv-python-headless") == "4.13.0.92",
                         f"{stem}: wrong PyPI wheel")
             build = Path(str(stem) + "-build.txt").read_text()
             require("Parallel framework:" in build, f"{stem}: missing build configuration")
+            if env in ("pthreads", "openmp", "tbb", "serial"):
+                require("opencv-source-" + env in names, f"{stem}: wrong source package")
+                require(not names.intersection({"opencv", "py-opencv", "libopencv"}),
+                        f"{stem}: prebuilt OpenCV contaminated source environment")
+                expected = {"pthreads": "pthreads", "openmp": "OpenMP", "tbb": "TBB", "serial": "NO"}[env]
+                framework = next(line.split(":", 1)[1].strip() for line in build.splitlines()
+                                 if "Parallel framework:" in line)
+                require(framework.startswith(expected), f"{stem}: {framework}, expected {expected}")
+                require(runtime["source_build"]["backend"] == env, f"{stem}: missing source evidence")
+                switches = runtime["source_build"]["cmake"]
+                for name, backend in (("WITH_PTHREADS_PF", "pthreads"), ("WITH_OPENMP", "openmp"), ("WITH_TBB", "tbb")):
+                    require(switches[name] == ("ON" if env == backend else "OFF"), f"{stem}: wrong {name}")
+                require(Path(str(stem) + "-CMakeCache.txt").is_file(), f"{stem}: missing CMake cache")
             with Path(str(stem) + "-timeline.csv").open(newline="") as f:
                 reader = csv.DictReader(f)
                 require(reader.fieldnames == ["elapsed_s", "cpu_percent", "os_threads", "frames"],
@@ -65,5 +78,6 @@ if __name__ == "__main__":
     parser.add_argument("directory", type=Path)
     parser.add_argument("--operation", choices=("resize", "remap", "cvtcolor"), default="resize")
     parser.add_argument("--machine")
+    parser.add_argument("--environments", nargs="+", default=["conda", "pypi"])
     args = parser.parse_args()
-    validate(args.directory, args.operation, args.machine)
+    validate(args.directory, args.operation, args.machine, args.environments)

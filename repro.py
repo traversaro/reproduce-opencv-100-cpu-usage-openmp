@@ -58,7 +58,7 @@ def runtime_metadata(proc, cv2, np):
     packages = []
     for record in sorted((Path(sys.prefix) / "conda-meta").glob("*.json")):
         d = json.loads(record.read_text())
-        if d.get("name") in {"python", "numpy", "opencv", "py-opencv", "libopencv",
+        if d.get("name", "").startswith("opencv-source-") or d.get("name") in {"python", "numpy", "opencv", "py-opencv", "libopencv",
                               "libgomp", "llvm-openmp", "libopenblas", "libblas", "mkl"}:
             packages.append({k: d.get(k) for k in ("name", "version", "build", "channel")})
     distributions = {}
@@ -78,7 +78,9 @@ def runtime_metadata(proc, cv2, np):
     if maps.is_file():
         native_libraries = sorted({line.split()[-1] for line in maps.read_text().splitlines()
                                   if any(s in line for s in ("libgomp", "libomp", "libiomp", "openblas", "libtbb", "libopencv"))})
+    source_evidence = Path(sys.prefix) / "share/opencv-source-build/build.json"
     return {
+        "source_build": json.loads(source_evidence.read_text()) if source_evidence.is_file() else None,
         "python": sys.version, "executable": sys.executable,
         "platform": platform.platform(), "machine": platform.machine(),
         "logical_cpus": os.cpu_count(),
@@ -188,6 +190,9 @@ def worker(args):
     stem = args.output_dir / f"{args.label}-{args.operation}-{args.case}"
     stem.with_suffix(".json").write_text(json.dumps(result, indent=2) + "\n")
     Path(str(stem) + "-build.txt").write_text(cv2.getBuildInformation())
+    cache = Path(sys.prefix) / "share/opencv-source-build/CMakeCache.txt"
+    if cache.is_file():
+        Path(str(stem) + "-CMakeCache.txt").write_text(cache.read_text())
     with Path(str(stem) + "-timeline.csv").open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=("elapsed_s", "cpu_percent", "os_threads", "frames"))
         w.writeheader()

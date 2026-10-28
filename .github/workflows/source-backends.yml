@@ -1,0 +1,82 @@
+name: Compare source-built parallel backends
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'source-build/**'
+      - 'repro.py'
+      - 'compare.py'
+      - 'validate_results.py'
+      - '.github/workflows/source-backends.yml'
+  pull_request:
+    paths:
+      - 'source-build/**'
+      - 'repro.py'
+      - 'compare.py'
+      - 'validate_results.py'
+      - '.github/workflows/source-backends.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source:
+    name: ${{ matrix.platform.arch }} / ${{ matrix.backend }}
+    runs-on: ${{ matrix.platform.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - arch: x86-64
+            machine: x86_64
+            runner: ubuntu-24.04
+          - arch: ARM64
+            machine: aarch64
+            runner: ubuntu-24.04-arm
+        backend: [pthreads, openmp, tbb, serial]
+    env:
+      BACKEND: ${{ matrix.backend }}
+      EXPECTED_MACHINE: ${{ matrix.platform.machine }}
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Check source configuration consistency
+        run: python3 source-build/check_config.py
+      - name: Build and install OpenCV from source
+        uses: prefix-dev/setup-pixi@a0af7a228712d6121d37aba47adf55c1332c9c2e # v0.9.4
+        with:
+          pixi-version: v0.83.0
+          manifest-path: source-build/pixi.toml
+          environments: ${{ matrix.backend }}
+          cache-key: opencv-source-${{ matrix.backend }}-
+          locked: true
+      - name: Measure and validate all three operations
+        run: |
+          for operation in resize remap cvtcolor; do
+            directory="$GITHUB_WORKSPACE/results/source/$BACKEND/$operation"
+            pixi run --manifest-path source-build/pixi.toml --locked -e "$BACKEND" python "$GITHUB_WORKSPACE/compare.py" \
+              --manifest-path "$GITHUB_WORKSPACE/source-build/pixi.toml" --environments "$BACKEND" \
+              --operation "$operation" --duration 8 --warmup 2 --output-dir "$directory"
+            pixi run --manifest-path source-build/pixi.toml --locked -e "$BACKEND" python "$GITHUB_WORKSPACE/validate_results.py" \
+              "$directory" --operation "$operation" --machine "$EXPECTED_MACHINE" --environments "$BACKEND"
+            cat "$directory/comparison.md" >> "$GITHUB_STEP_SUMMARY"
+          done
+      - name: Upload source build evidence and measurements
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: opencv-source-${{ matrix.platform.arch }}-${{ matrix.backend }}
+          path: |
+            results/source/
+            source-build/pixi.toml
+            source-build/pixi.lock
+            source-build/build.sh
+            source-build/*/pixi.toml
+            source-build/*/recipe.yaml
+          retention-days: 30
+          if-no-files-found: warn
