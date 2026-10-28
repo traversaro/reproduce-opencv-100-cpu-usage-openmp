@@ -1,0 +1,147 @@
+{
+  "case": "idle",
+  "label": "pypi",
+  "settings": {
+    "operation": "resize",
+    "fps": 30.0,
+    "width": 1920,
+    "height": 1080,
+    "duration": 5.0,
+    "warmup": 1.0,
+    "inherit_thread_env": false
+  },
+  "thread_stages": {
+    "before_numpy": 1,
+    "after_numpy": 1,
+    "after_cv2": 1,
+    "after_warmup": 1
+  },
+  "runtime": {
+    "python": "3.11.18 (main, Oct 26 2026, 11:35:17) [GCC 15.3.0]",
+    "executable": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/bin/python",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "logical_cpus": 9,
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "cgroups": {
+      "cpu.max": "800000 100000",
+      "cpuset.cpus.effective": "0-8",
+      "cpu.stat": "usage_usec 181944207\nuser_usec 105357478\nsystem_usec 76586728\nnice_usec 0\nnr_periods 15392\nnr_throttled 12\nthrottled_usec 405605\nnr_bursts 0\nburst_usec 0"
+    },
+    "opencv_version": "4.13.0",
+    "opencv_file": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/cv2/__init__.py",
+    "numpy_version": "2.2.6",
+    "numpy_file": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/numpy/__init__.py",
+    "opencv_num_threads": 8,
+    "opencv_num_cpus": 8,
+    "threadpools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-56d6093b.so",
+        "version": "0.3.29",
+        "threading_layer": "pthreads",
+        "architecture": "SkylakeX"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libopenblas",
+        "filepath": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/opencv_python_headless.libs/libopenblasp-r0-59ffcd50.3.15.so",
+        "version": "0.3.15",
+        "threading_layer": "pthreads",
+        "architecture": "Prescott"
+      }
+    ],
+    "conda_packages": [
+      {
+        "name": "libgomp",
+        "version": "16.2.0",
+        "build": "he0feb66_7",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      },
+      {
+        "name": "python",
+        "version": "3.11.18",
+        "build": "h5f976f7_0_cpython",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      }
+    ],
+    "python_distributions": {
+      "numpy": "2.2.6",
+      "opencv-python-headless": "4.13.0.92",
+      "psutil": "7.0.0",
+      "threadpoolctl": "3.6.0"
+    },
+    "native_libraries": [
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-56d6093b.so",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/opencv_python_headless.libs/libopenblasp-r0-59ffcd50.3.15.so"
+    ],
+    "thread_environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "KMP_DUPLICATE_LIB_OK": "True"
+    }
+  },
+  "summary": {
+    "wall_s": 5.000101016999906,
+    "cpu_s": 0.016123524,
+    "cpu_percent": 0.3224639651315329,
+    "cpu_cores_equivalent": 0.003224639651315329,
+    "frames": 150,
+    "actual_fps": 29.999393910245637,
+    "deadline_misses": 0,
+    "operation_wall_s": 0.00038113199752842775,
+    "operation_cpu_s": 0.00015574399999962463,
+    "sleep_wall_s": 4.988234967003336,
+    "sleep_cpu_s": 0.004466882000000005,
+    "sleep_cpu_percent": 0.08954834785345864,
+    "peak_os_threads": 1,
+    "final_os_threads": 1,
+    "timeline": [
+      {
+        "elapsed_s": 1.000109252999664,
+        "cpu_percent": 0.3981988955761994,
+        "os_threads": 1,
+        "frames": 30
+      },
+      {
+        "elapsed_s": 2.0334222639999098,
+        "cpu_percent": 0.3039362677684518,
+        "os_threads": 1,
+        "frames": 61
+      },
+      {
+        "elapsed_s": 3.033479742999589,
+        "cpu_percent": 0.3112044122816889,
+        "os_threads": 1,
+        "frames": 91
+      },
+      {
+        "elapsed_s": 4.066788125999665,
+        "cpu_percent": 0.318746083375165,
+        "os_threads": 1,
+        "frames": 122
+      }
+    ]
+  },
+  "top_threads": [
+    {
+      "tid": 3314,
+      "cpu_s": 0.020000000000000018
+    }
+  ]
+}

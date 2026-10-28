@@ -1,0 +1,29 @@
+[workspace]
+name = "opencv-thread-repro"
+version = "0.1.0"
+description = "Compare periodic OpenCV CPU consumption and native threads: conda-forge vs PyPI"
+channels = ["conda-forge"]
+platforms = ["linux-64", "linux-aarch64"]
+
+[dependencies]
+python = "3.11.*"
+psutil = "==7.0.0"
+threadpoolctl = "==3.6.0"
+
+[feature.conda.dependencies]
+opencv = { version = "==4.13.0", build = "headless*" }
+numpy = "==2.2.6"
+
+[feature.pypi.pypi-dependencies]
+opencv-python-headless = "==4.13.0.92"
+numpy = "==2.2.6"
+
+[environments]
+conda = ["conda"]
+pypi = ["pypi"]
+
+[tasks]
+repro = "python repro.py"
+suite = "python repro.py --suite"
+compare = "python compare.py"
+smoke = "python repro.py --suite --duration 0.3 --warmup 0.1 --width 320 --height 240 --output-dir results/smoke"

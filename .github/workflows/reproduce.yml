@@ -1,0 +1,66 @@
+name: Reproduce OpenCV CPU usage
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    name: ${{ matrix.platform.arch }} / ${{ matrix.operation }}
+    runs-on: ${{ matrix.platform.runner }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - arch: x86-64
+            machine: x86_64
+            runner: ubuntu-24.04
+          - arch: ARM64
+            machine: aarch64
+            runner: ubuntu-24.04-arm
+        operation: [resize, remap, cvtcolor]
+    env:
+      OPERATION: ${{ matrix.operation }}
+      EXPECTED_MACHINE: ${{ matrix.platform.machine }}
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: prefix-dev/setup-pixi@a0af7a228712d6121d37aba47adf55c1332c9c2e # v0.9.4
+        with:
+          pixi-version: v0.83.0
+          environments: default conda pypi
+          locked: true
+      - name: Check native runner architecture
+        run: |
+          pixi run --locked python -c 'import os, platform; actual = platform.machine(); print(actual); assert actual == os.environ["EXPECTED_MACHINE"], (actual, os.environ["EXPECTED_MACHINE"])'
+      - name: Compare conda-forge and PyPI
+        run: |
+          pixi run --locked compare --operation "$OPERATION" --duration 8 --warmup 2 --output-dir results/ci
+      - name: Validate measurements and package provenance
+        run: |
+          pixi run --locked python validate_results.py results/ci --operation "$OPERATION" --machine "$EXPECTED_MACHINE"
+      - name: Add comparison to job summary
+        if: always()
+        run: |
+          if [ -f results/ci/comparison.md ]; then
+            cat results/ci/comparison.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload measurements and build information
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: opencv-cpu-${{ matrix.platform.arch }}-${{ matrix.operation }}
+          path: |
+            results/ci/
+            pixi.toml
+            pixi.lock
+          if-no-files-found: warn
+          retention-days: 30

@@ -1,0 +1,148 @@
+{
+  "case": "single",
+  "label": "pypi",
+  "settings": {
+    "operation": "resize",
+    "fps": 30.0,
+    "width": 1920,
+    "height": 1080,
+    "duration": 5.0,
+    "warmup": 1.0,
+    "inherit_thread_env": false
+  },
+  "thread_stages": {
+    "before_numpy": 1,
+    "after_numpy": 1,
+    "after_cv2": 1,
+    "after_warmup": 1
+  },
+  "runtime": {
+    "python": "3.11.18 (main, Oct 26 2026, 11:35:17) [GCC 15.3.0]",
+    "executable": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/bin/python",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "logical_cpus": 9,
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "cgroups": {
+      "cpu.max": "800000 100000",
+      "cpuset.cpus.effective": "0-8",
+      "cpu.stat": "usage_usec 185059329\nuser_usec 107075735\nsystem_usec 77983593\nnice_usec 0\nnr_periods 15509\nnr_throttled 12\nthrottled_usec 405605\nnr_bursts 0\nburst_usec 0"
+    },
+    "opencv_version": "4.13.0",
+    "opencv_file": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/cv2/__init__.py",
+    "numpy_version": "2.2.6",
+    "numpy_file": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/numpy/__init__.py",
+    "opencv_num_threads": 1,
+    "opencv_num_cpus": 8,
+    "threadpools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "filepath": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-56d6093b.so",
+        "version": "0.3.29",
+        "threading_layer": "pthreads",
+        "architecture": "SkylakeX"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libopenblas",
+        "filepath": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/opencv_python_headless.libs/libopenblasp-r0-59ffcd50.3.15.so",
+        "version": "0.3.15",
+        "threading_layer": "pthreads",
+        "architecture": "Prescott"
+      }
+    ],
+    "conda_packages": [
+      {
+        "name": "libgomp",
+        "version": "16.2.0",
+        "build": "he0feb66_7",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      },
+      {
+        "name": "python",
+        "version": "3.11.18",
+        "build": "h5f976f7_0_cpython",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      }
+    ],
+    "python_distributions": {
+      "numpy": "2.2.6",
+      "opencv-python-headless": "4.13.0.92",
+      "psutil": "7.0.0",
+      "threadpoolctl": "3.6.0"
+    },
+    "native_libraries": [
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/numpy.libs/libscipy_openblas64_-56d6093b.so",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/pypi/lib/python3.11/site-packages/opencv_python_headless.libs/libopenblasp-r0-59ffcd50.3.15.so"
+    ],
+    "thread_environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "KMP_DUPLICATE_LIB_OK": "True"
+    }
+  },
+  "summary": {
+    "wall_s": 5.000124858000163,
+    "cpu_s": 0.233554024,
+    "cpu_percent": 4.670963838559256,
+    "cpu_cores_equivalent": 0.04670963838559257,
+    "frames": 150,
+    "actual_fps": 29.99925087070598,
+    "deadline_misses": 1,
+    "operation_wall_s": 0.20961563399941952,
+    "operation_cpu_s": 0.20987893200000013,
+    "sleep_wall_s": 4.7724576329997035,
+    "sleep_cpu_s": 0.006152259999999687,
+    "sleep_cpu_percent": 0.12891177823055322,
+    "peak_os_threads": 1,
+    "final_os_threads": 1,
+    "timeline": [
+      {
+        "elapsed_s": 1.0001082520002456,
+        "cpu_percent": 3.3881063307126587,
+        "os_threads": 1,
+        "frames": 30
+      },
+      {
+        "elapsed_s": 2.0001088680000976,
+        "cpu_percent": 3.239582904417408,
+        "os_threads": 1,
+        "frames": 60
+      },
+      {
+        "elapsed_s": 3.0001877859999695,
+        "cpu_percent": 3.068864711335105,
+        "os_threads": 1,
+        "frames": 90
+      },
+      {
+        "elapsed_s": 4.033483091000107,
+        "cpu_percent": 3.854103159792704,
+        "os_threads": 1,
+        "frames": 121
+      }
+    ]
+  },
+  "top_threads": [
+    {
+      "tid": 3419,
+      "cpu_s": 0.23999999999999996
+    }
+  ],
+  "cgroup_cpu_stat_after": "usage_usec 185972887\nuser_usec 107515892\nsystem_usec 78456995\nnice_usec 0\nnr_periods 15560\nnr_throttled 12\nthrottled_usec 405605\nnr_bursts 0\nburst_usec 0"
+}

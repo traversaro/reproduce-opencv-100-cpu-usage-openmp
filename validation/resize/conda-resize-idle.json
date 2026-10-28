@@ -1,0 +1,233 @@
+{
+  "case": "idle",
+  "label": "conda",
+  "settings": {
+    "operation": "resize",
+    "fps": 30.0,
+    "width": 1920,
+    "height": 1080,
+    "duration": 5.0,
+    "warmup": 1.0,
+    "inherit_thread_env": false
+  },
+  "thread_stages": {
+    "before_numpy": 1,
+    "after_numpy": 1,
+    "after_cv2": 1,
+    "after_warmup": 1
+  },
+  "runtime": {
+    "python": "3.11.18 (main, Oct 26 2026, 11:35:17) [GCC 15.3.0]",
+    "executable": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/bin/python",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "logical_cpus": 9,
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "cgroups": {
+      "cpu.max": "800000 100000",
+      "cpuset.cpus.effective": "0-8",
+      "cpu.stat": "usage_usec 162097786\nuser_usec 85674924\nsystem_usec 76422862\nnice_usec 0\nnr_periods 15072\nnr_throttled 12\nthrottled_usec 405605\nnr_bursts 0\nburst_usec 0"
+    },
+    "opencv_version": "4.13.0",
+    "opencv_file": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/python3.11/site-packages/cv2/__init__.py",
+    "numpy_version": "2.2.6",
+    "numpy_file": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/python3.11/site-packages/numpy/__init__.py",
+    "opencv_num_threads": 9,
+    "opencv_num_cpus": 8,
+    "threadpools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libopenblas",
+        "filepath": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopenblasp-r0.3.34.so",
+        "version": "0.3.34",
+        "threading_layer": "pthreads",
+        "architecture": "Cooperlake"
+      },
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "num_threads": 9,
+        "prefix": "libgomp",
+        "filepath": "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libgomp.so.1.0.0",
+        "version": null
+      }
+    ],
+    "conda_packages": [
+      {
+        "name": "libblas",
+        "version": "3.11.0",
+        "build": "11_h4a7cf45_openblas",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      },
+      {
+        "name": "libgomp",
+        "version": "16.2.0",
+        "build": "he0feb66_7",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      },
+      {
+        "name": "libopenblas",
+        "version": "0.3.34",
+        "build": "pthreads_hf13c14d_2",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      },
+      {
+        "name": "libopencv",
+        "version": "4.13.0",
+        "build": "headless_h59dba13_19",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      },
+      {
+        "name": "numpy",
+        "version": "2.2.6",
+        "build": "py311h5d046bc_0",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      },
+      {
+        "name": "opencv",
+        "version": "4.13.0",
+        "build": "headless_h47a1348_19",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      },
+      {
+        "name": "py-opencv",
+        "version": "4.13.0",
+        "build": "headless_h413394a_19",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      },
+      {
+        "name": "python",
+        "version": "3.11.18",
+        "build": "h5f976f7_0_cpython",
+        "channel": "https://conda.anaconda.org/conda-forge/"
+      }
+    ],
+    "python_distributions": {
+      "numpy": "2.2.6",
+      "opencv-python": "4.13.0",
+      "opencv-python-headless": "4.13.0",
+      "psutil": "7.0.0",
+      "threadpoolctl": "3.6.0"
+    },
+    "native_libraries": [
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libgomp.so.1.0.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopenblasp-r0.3.34.so",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_alphamat.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_aruco.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_bgsegm.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_bioinspired.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_calib3d.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_ccalib.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_core.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_dnn.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_dnn_superres.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_face.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_features2d.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_flann.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_freetype.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_fuzzy.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_gapi.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_hdf.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_hfs.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_highgui.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_img_hash.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_imgcodecs.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_imgproc.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_intensity_transform.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_line_descriptor.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_mcc.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_ml.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_objdetect.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_optflow.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_phase_unwrapping.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_photo.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_plot.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_quality.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_rapid.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_reg.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_rgbd.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_saliency.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_shape.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_signal.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_stereo.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_stitching.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_structured_light.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_surface_matching.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_text.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_tracking.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_video.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_videoio.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_wechat_qrcode.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_xfeatures2d.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_ximgproc.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libopencv_xphoto.so.4.13.0",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libtbb.so.12.19",
+      "/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libtbbmalloc.so.2.19"
+    ],
+    "thread_environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "KMP_DUPLICATE_LIB_OK": "True"
+    }
+  },
+  "summary": {
+    "wall_s": 5.000115219000236,
+    "cpu_s": 0.019974490999999983,
+    "cpu_percent": 0.3994806144485976,
+    "cpu_cores_equivalent": 0.003994806144485976,
+    "frames": 150,
+    "actual_fps": 29.99930870192872,
+    "deadline_misses": 0,
+    "operation_wall_s": 0.000201291997655062,
+    "operation_cpu_s": 0.00019242499999988505,
+    "sleep_wall_s": 4.984736289997727,
+    "sleep_cpu_s": 0.005036776999999992,
+    "sleep_cpu_percent": 0.10104400126656027,
+    "peak_os_threads": 1,
+    "final_os_threads": 1,
+    "timeline": [
+      {
+        "elapsed_s": 1.000089275999926,
+        "cpu_percent": 0.42021498488704156,
+        "os_threads": 1,
+        "frames": 30
+      },
+      {
+        "elapsed_s": 2.000102120000065,
+        "cpu_percent": 0.3241386367633034,
+        "os_threads": 1,
+        "frames": 60
+      },
+      {
+        "elapsed_s": 3.0334586310000304,
+        "cpu_percent": 0.4326150706375296,
+        "os_threads": 1,
+        "frames": 91
+      },
+      {
+        "elapsed_s": 4.066777483999886,
+        "cpu_percent": 0.41308227248618695,
+        "os_threads": 1,
+        "frames": 122
+      }
+    ]
+  },
+  "top_threads": [
+    {
+      "tid": 3174,
+      "cpu_s": 0.02999999999999997
+    }
+  ]
+}

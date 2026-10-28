@@ -1,0 +1,116 @@
+
+General configuration for OpenCV 4.13.0 =====================================
+  Version control:               9bd628a-dirty
+
+  Extra modules:
+    Location (extra):            /home/conda/feedstock_root/build_artifacts/libopencv_1792537590818/work/opencv_contrib/modules
+    Version control (extra):     9bd628a-dirty
+
+  Platform:
+    Timestamp:                   2026-10-20T23:09:11Z
+    Host:                        Linux 7.0.0-1017-azure x86_64
+    CMake:                       4.4.4
+    CMake generator:             Ninja
+    CMake build tool:            /home/conda/feedstock_root/build_artifacts/libopencv_1792537590818/_build_env/bin/ninja
+    Configuration:               Release
+    Algorithm Hint:              ALGO_HINT_ACCURATE
+
+  CPU/HW features:
+    Baseline:                    SSE SSE2 SSE3
+      requested:                 SSE3
+    Dispatched code generation:  SSE4_1 SSE4_2 AVX FP16 AVX2 AVX512_SKX
+      SSE4_1 (17 files):         + SSSE3 SSE4_1
+      SSE4_2 (1 files):          + SSSE3 SSE4_1 POPCNT SSE4_2
+      AVX (9 files):             + SSSE3 SSE4_1 POPCNT SSE4_2 AVX
+      FP16 (0 files):            + SSSE3 SSE4_1 POPCNT SSE4_2 AVX FP16
+      AVX2 (37 files):           + SSSE3 SSE4_1 POPCNT SSE4_2 AVX FP16 AVX2 FMA3
+      AVX512_SKX (7 files):      + SSSE3 SSE4_1 POPCNT SSE4_2 AVX FP16 AVX2 FMA3 AVX_512F AVX512_COMMON AVX512_SKX
+
+  C/C++:
+    Built as dynamic libs?:      YES
+    C++ standard:                17
+    C++ Compiler:                /home/conda/feedstock_root/build_artifacts/libopencv_1792537590818/_build_env/bin/x86_64-conda-linux-gnu-c++  (ver 15.3.0)
+    C++ flags (Release):         -fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -fno-merge-constants -isystem /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/libopencv_1792537590818/work=/usr/local/src/conda/libopencv-4.13.0 -fdebug-prefix-map=/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda=/usr/local/src/conda-prefix -D__STDC_CONSTANT_MACROS   -fsigned-char -W -Wall -Wreturn-type -Wnon-virtual-dtor -Waddress -Wsequence-point -Wformat -Wformat-security -Wmissing-declarations -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wuninitialized -Wsuggest-override -Wno-delete-non-virtual-dtor -Wno-comment -Wimplicit-fallthrough=3 -Wno-strict-overflow -fdiagnostics-show-option -pthread -fomit-frame-pointer -ffunction-sections -fdata-sections  -fopenmp -O3 -DNDEBUG  -DNDEBUG
+    C++ flags (Debug):           -fvisibility-inlines-hidden -fmessage-length=0 -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -fno-merge-constants -isystem /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/libopencv_1792537590818/work=/usr/local/src/conda/libopencv-4.13.0 -fdebug-prefix-map=/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda=/usr/local/src/conda-prefix -D__STDC_CONSTANT_MACROS   -fsigned-char -W -Wall -Wreturn-type -Wnon-virtual-dtor -Waddress -Wsequence-point -Wformat -Wformat-security -Wmissing-declarations -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wuninitialized -Wsuggest-override -Wno-delete-non-virtual-dtor -Wno-comment -Wimplicit-fallthrough=3 -Wno-strict-overflow -fdiagnostics-show-option -pthread -fomit-frame-pointer -ffunction-sections -fdata-sections  -fopenmp -g  -DDEBUG -D_DEBUG
+    C Compiler:                  /home/conda/feedstock_root/build_artifacts/libopencv_1792537590818/_build_env/bin/x86_64-conda-linux-gnu-cc
+    C flags (Release):           -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -fno-merge-constants -isystem /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/libopencv_1792537590818/work=/usr/local/src/conda/libopencv-4.13.0 -fdebug-prefix-map=/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda=/usr/local/src/conda-prefix   -fsigned-char -W -Wall -Wreturn-type -Waddress -Wsequence-point -Wformat -Wformat-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wuninitialized -Wno-comment -Wimplicit-fallthrough=3 -Wno-strict-overflow -fdiagnostics-show-option -pthread -fomit-frame-pointer -ffunction-sections -fdata-sections  -fopenmp -O3 -DNDEBUG  -DNDEBUG
+    C flags (Debug):             -march=nocona -mtune=haswell -ftree-vectorize -fPIC -fstack-protector-strong -fno-plt -O2 -ffunction-sections -pipe -fno-merge-constants -isystem /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/include -fdebug-prefix-map=/home/conda/feedstock_root/build_artifacts/libopencv_1792537590818/work=/usr/local/src/conda/libopencv-4.13.0 -fdebug-prefix-map=/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda=/usr/local/src/conda-prefix   -fsigned-char -W -Wall -Wreturn-type -Waddress -Wsequence-point -Wformat -Wformat-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wuninitialized -Wno-comment -Wimplicit-fallthrough=3 -Wno-strict-overflow -fdiagnostics-show-option -pthread -fomit-frame-pointer -ffunction-sections -fdata-sections  -fopenmp -g  -DDEBUG -D_DEBUG
+    Linker flags (Release):      -Wl,--exclude-libs,libippicv.a -Wl,--exclude-libs,libippiw.a -Wl,-O2 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,--disable-new-dtags -Wl,--gc-sections -Wl,--allow-shlib-undefined -Wl,-rpath,/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib -Wl,-rpath-link,/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib -L/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib  -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined  
+    Linker flags (Debug):        -Wl,--exclude-libs,libippicv.a -Wl,--exclude-libs,libippiw.a -Wl,-O2 -Wl,--sort-common -Wl,--as-needed -Wl,-z,relro -Wl,-z,now -Wl,--disable-new-dtags -Wl,--gc-sections -Wl,--allow-shlib-undefined -Wl,-rpath,/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib -Wl,-rpath-link,/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib -L/workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib  -Wl,--gc-sections -Wl,--as-needed -Wl,--no-undefined  
+    ccache:                      NO
+    Precompiled headers:         NO
+    Extra dependencies:          dl m pthread rt
+    3rdparty dependencies:
+
+  OpenCV modules:
+    To be built:                 alphamat aruco bgsegm bioinspired calib3d ccalib core datasets dnn dnn_objdetect dnn_superres dpm face features2d flann freetype fuzzy gapi hdf hfs highgui img_hash imgcodecs imgproc intensity_transform line_descriptor mcc ml objdetect optflow phase_unwrapping photo plot python3 quality rapid reg rgbd saliency shape signal stereo stitching structured_light superres surface_matching text tracking video videoio videostab wechat_qrcode xfeatures2d ximgproc xobjdetect xphoto
+    Disabled:                    world
+    Disabled by dependency:      -
+    Unavailable:                 cannops cudaarithm cudabgsegm cudacodec cudafeatures2d cudafilters cudaimgproc cudalegacy cudaobjdetect cudaoptflow cudastereo cudawarping cudev cvv fastcv java julia matlab ovis python2 sfm ts viz
+    Applications:                apps
+    Documentation:               NO
+    Non-free algorithms:         NO
+
+  GUI:                           NONE
+
+  Media I/O: 
+    ZLib:                        /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libz.so (ver 1.3.2)
+    JPEG:                        /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libjpeg.so (ver 80)
+    WEBP:                        /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libwebp.so (ver decoder: 0x0210, encoder: 0x0210, demux: 0x0107)
+    AVIF:                        avif (ver 1.4.2)
+    PNG:                         /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libpng.so (ver 1.6.59)
+    TIFF:                        /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libtiff.so (ver 42 / 4.7.2)
+    JPEG XL:                     /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libjxl.so /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libjxl_cms.so /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/liblcms2.so /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libjxl_threads.so /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libbrotlidec.so /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libbrotlienc.so /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libbrotlicommon.so /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libhwy.so (ver 0.12.0)
+    JPEG 2000:                   OpenJPEG (ver 2.5.4)
+    OpenEXR:                     OpenEXR::OpenEXR (ver 3.5.2)
+    GIF:                         YES
+    HDR:                         YES
+    SUNRASTER:                   YES
+    PXM:                         YES
+    PFM:                         YES
+
+  Video I/O:
+    FFMPEG:                      YES
+      avcodec:                   YES (63.1.102)
+      avformat:                  YES (63.1.102)
+      avutil:                    YES (61.1.102)
+      swscale:                   YES (10.1.102)
+      avdevice:                  YES (63.1.102)
+    v4l/v4l2:                    YES (linux/videodev2.h)
+    Orbbec:                      NO
+
+  Parallel framework:            OpenMP
+
+  Trace:                         YES (with Intel ITT(3.25.4))
+
+  Other third-party libraries:
+    Intel IPP:                   2022.2.0 [2022.2.0]
+           at:                   /home/conda/feedstock_root/build_artifacts/libopencv_1792537590818/work/build/3rdparty/ippicv/ippicv_lnx/icv
+    Intel IPP IW:                sources (2022.2.0)
+              at:                /home/conda/feedstock_root/build_artifacts/libopencv_1792537590818/work/build/3rdparty/ippicv/ippicv_lnx/iw
+    Lapack:                      YES (lapack cblas)
+    OpenVINO:                    YES (2026.4.1)
+    Eigen:                       YES (ver 5.0.1)
+    Custom HAL:                  YES (ipp (ver 0.0.1))
+    Protobuf:                    /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libprotobuf.so.35.1.0 (35.1.0)
+    Flatbuffers:                 builtin/3rdparty (25.9.23)
+
+  Python 3:
+    Interpreter:                 /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/bin/python (ver 3.11.17)
+    Libraries:                   /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/libpython3.11.so (ver 3.11.17)
+    Limited API:                 YES (ver 0x030B0000)
+    numpy:                       /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/lib/python3.11/site-packages/numpy/_core/include (ver 2.4.6)
+    install path:                lib/python3.11/site-packages/cv2/python-3
+
+  Python (for build):            /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda/bin/python
+
+  Java:                          
+    ant:                         NO
+    Java:                        NO
+    JNI:                         NO
+    Java wrappers:               NO
+    Java tests:                  NO
+
+  Install to:                    /workspace/scratch/23a3560ce4a4/opencv-thread-repro/.pixi/envs/conda
+-----------------------------------------------------------------
+
