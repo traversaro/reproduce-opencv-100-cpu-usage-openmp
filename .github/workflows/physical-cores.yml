@@ -1,0 +1,45 @@
+name: Compare two physical cores
+on:
+  push:
+    branches: [main]
+    paths: ['investigation/physical_cores.py', '.github/workflows/physical-cores.yml']
+  pull_request:
+    paths: ['investigation/physical_cores.py', '.github/workflows/physical-cores.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  physical:
+    name: Two physical cores / ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: prefix-dev/setup-pixi@a0af7a228712d6121d37aba47adf55c1332c9c2e # v0.9.4
+        with:
+          pixi-version: v0.83.0
+          manifest-path: source-build/pixi.toml
+          environments: openmp
+          cache-key: opencv-source-openmp-
+          locked: true
+      - name: Compile standalone reproducer against the selected libgomp
+        run: |
+          mkdir -p results/physical-cores
+          gcc --version | tee results/physical-cores/compiler.txt
+          pixi run --locked --manifest-path source-build/pixi.toml -e openmp bash -c 'gcc -O2 -Wall -Wextra -Werror -fopenmp "$GITHUB_WORKSPACE/investigation/openmp_wait.c" -L"$CONDA_PREFIX/lib" -Wl,-rpath,"$CONDA_PREFIX/lib" -lm -o "$GITHUB_WORKSPACE/results/physical-cores/openmp_wait"'
+      - name: Pin two threads to distinct physical cores
+        run: |
+          pixi run --locked --manifest-path source-build/pixi.toml -e openmp python "$GITHUB_WORKSPACE/investigation/physical_cores.py" --native "$GITHUB_WORKSPACE/results/physical-cores/openmp_wait" --output "$GITHUB_WORKSPACE/results/physical-cores"
+          cat results/physical-cores/comparison.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: physical-cores-${{ matrix.runner }}
+          path: results/physical-cores/
+          retention-days: 30

@@ -65,3 +65,14 @@ purposes such as reducing contention and power in other workloads.
 The standalone microbenchmark also times a compiler-barrier-only loop on x86.
 That is a same-machine control for the PAUSE cost; the ARM64 pair uses equivalent
 loops. CPU model and complete topology are printed in the CI log as well as saved.
+
+## Follow-up: match physical cores as well as logical threads
+
+The first artifacts showed AMD EPYC 7763 with four vCPUs backed by two SMT cores,
+versus Neoverse N2 with four non-SMT cores. `physical-cores.yml` therefore selects
+two distinct `(physical_package_id, core_id)` pairs from sysfs on each VM,
+restricts the process to one logical CPU per chosen core, and binds exactly two
+OpenMP threads to those two CPU places. Default, explicit 300000, and zero spins
+are measured three times for all three workloads. libgomp's verbose environment
+and affinity display are saved for every child. This matches the topology
+exposed by the VMs; it cannot establish exclusive use of underlying host cores.
