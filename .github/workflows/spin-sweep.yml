@@ -2,9 +2,9 @@ name: Investigate OpenMP spin waiting
 on:
   push:
     branches: [main]
-    paths: ['investigation/**', 'repro.py', '.github/workflows/spin-sweep.yml']
+    paths: ['investigation/openmp_wait.c', 'investigation/sweep.py', 'investigation/patch_pause.py', 'repro.py', '.github/workflows/spin-sweep.yml']
   pull_request:
-    paths: ['investigation/**', 'repro.py', '.github/workflows/spin-sweep.yml']
+    paths: ['investigation/openmp_wait.c', 'investigation/sweep.py', 'investigation/patch_pause.py', 'repro.py', '.github/workflows/spin-sweep.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -40,6 +40,11 @@ jobs:
         run: |
           pixi run --locked --manifest-path source-build/pixi.toml -e openmp python "$GITHUB_WORKSPACE/investigation/sweep.py" --native "$GITHUB_WORKSPACE/results/spin-sweep/openmp_wait" --output "$GITHUB_WORKSPACE/results/spin-sweep"
           cat results/spin-sweep/comparison.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Test a private runtime copy with x86 PAUSE replaced by NOP
+        run: |
+          pixi run --locked --manifest-path source-build/pixi.toml -e openmp bash -c 'python "$GITHUB_WORKSPACE/investigation/patch_pause.py" "$CONDA_PREFIX/lib/libgomp.so.1" "$GITHUB_WORKSPACE/results/spin-sweep/nopause-lib/libgomp.so.1"'
+          pixi run --locked --manifest-path source-build/pixi.toml -e openmp python "$GITHUB_WORKSPACE/investigation/sweep.py" --native "$GITHUB_WORKSPACE/results/spin-sweep/openmp_wait" --libgomp "$GITHUB_WORKSPACE/results/spin-sweep/nopause-lib/libgomp.so.1" --control-only --output "$GITHUB_WORKSPACE/results/spin-sweep/nopause"
+          cat results/spin-sweep/nopause/comparison.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

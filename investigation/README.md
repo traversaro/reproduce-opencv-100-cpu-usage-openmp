@@ -43,3 +43,25 @@ pixi run --locked --manifest-path source-build/pixi.toml -e openmp \
 
 A system C compiler and binutils are required. The compiler is recorded; the
 runtime is explicitly linked from Pixi and verified by `ldd` before measurement.
+
+## Follow-up: isolate the PAUSE instruction
+
+After the first CI sweep reproduced the architecture gap without OpenCV,
+`patch_pause.py` adds a diagnostic intervention. On x86-64 it creates a private
+libgomp copy, uses ELF section addresses and decoded disassembly to locate PAUSE
+instructions, and replaces each two-byte `f3 90` with `90 90` (NOP NOP). It checks
+that only those instruction bytes changed and saves addresses and hashes. On
+ARM64 it makes an unchanged copy as a sham control. The installed runtime is
+never modified.
+
+The workflow reruns default, explicit 300000, and zero spin counts with this
+private runtime preloaded into fresh children. Both the C executable and OpenCV
+must load exactly the selected private libgomp file. Three repetitions use the
+same four-thread settings, cadence and timing as the original sweep. Results
+live in the `nopause/` artifact subdirectory. This runtime copy is an experiment
+to identify a mechanism, not a proposed replacement runtime: PAUSE also has
+purposes such as reducing contention and power in other workloads.
+
+The standalone microbenchmark also times a compiler-barrier-only loop on x86.
+That is a same-machine control for the PAUSE cost; the ARM64 pair uses equivalent
+loops. CPU model and complete topology are printed in the CI log as well as saved.

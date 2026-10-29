@@ -23,6 +23,8 @@ def main():
     p.add_argument("--duration", type=float, default=4)
     p.add_argument("--warmup", type=float, default=1)
     p.add_argument("--repeats", type=int, default=3)
+    p.add_argument("--libgomp", type=Path, help="Use a private diagnostic runtime copy via LD_PRELOAD")
+    p.add_argument("--control-only", action="store_true", help="Four-thread default/300000/zero control")
     p.add_argument("--quick", action="store_true", help="Small smoke sweep")
     args = p.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
@@ -38,9 +40,11 @@ def main():
         env_base.pop(k, None)
     env_base.update(OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1", OMP_DYNAMIC="FALSE", OMP_THREAD_LIMIT="4")
     native = args.native.resolve()
-    linked = subprocess.check_output(["ldd", str(native)], text=True)
-    expected = (Path(sys.prefix) / "lib/libgomp.so.1").resolve()
-    actual = next(Path(l.split("=>")[1].strip().split()[0]).resolve()
+    expected = (args.libgomp or (Path(sys.prefix) / "lib/libgomp.so.1")).resolve()
+    if args.libgomp:
+        env_base["LD_PRELOAD"] = str(expected)
+    linked = subprocess.check_output(["ldd", str(native)], text=True, env=env_base)
+    actual = next(Path(l.split("=>")[-1].strip().split()[0]).resolve()
                   for l in linked.splitlines() if "libgomp.so" in l)
     if actual != expected:
         raise RuntimeError(f"Native libgomp {actual} != selected environment {expected}")
@@ -49,13 +53,18 @@ def main():
                 "lscpu": subprocess.check_output(["lscpu"], text=True), "native_ldd": linked,
                 "libgomp_path": str(actual), "libgomp_sha256": hashlib.sha256(actual.read_bytes()).hexdigest(),
                 "spin_microbench": [json.loads(subprocess.check_output([str(native), "spin"], text=True)) for _ in range(3)],
+                "spin_without_pause": [json.loads(subprocess.check_output([str(native), "spin-nopause"], text=True)) for _ in range(3)],
                 "duration": args.duration, "warmup": args.warmup, "repeats": args.repeats,
                 "percent_denominator": "full measured wall time; 100% = one logical CPU"}
     (args.output / "machine.json").write_text(json.dumps(metadata, indent=2) + "\n")
     print("MACHINE", metadata["machine"], "CPUS", metadata["affinity_measured"], flush=True)
     print("SPIN_NS", [x["ns_per_spin"] for x in metadata["spin_microbench"]], flush=True)
+    print("NO_PAUSE_NS", [x["ns_per_spin"] for x in metadata["spin_without_pause"]], flush=True)
+    print("TOPOLOGY\n" + metadata["lscpu"], flush=True)
     settings = [(4, str(n)) for n in ("default", 0, 1000, 10000, 100000, 300000, 1000000, "passive")]
     settings += [(n, spin) for n in (1, 2) for spin in ("default", "0")]
+    if args.control_only:
+        settings = [(4, spin) for spin in ("default", "300000", "0")]
     if args.quick:
         settings = [(1, "0"), (4, "0"), (4, "default")]
     cases = [(op, team, spin, rep) for op in ("native", "resize", "cvtcolor")
@@ -83,7 +92,7 @@ def main():
             summary = details["summary"]
             assert details["runtime"]["opencv_num_threads"] == team
             assert "OpenMP" in (args.output / "raw" / f"{name}-{op}-default-build.txt").read_text()
-            assert expected in [Path(x).resolve() for x in details["runtime"]["native_libraries"] if "libgomp.so" in x]
+            assert {expected} == {Path(x).resolve() for x in details["runtime"]["native_libraries"] if "libgomp.so" in x}
             assert summary["peak_os_threads"] == team, (name, summary["peak_os_threads"])
         for k in ("wall_s", "cpu_s", "worker_cpu_s", "sleep_worker_cpu_s"):
             assert math.isfinite(summary[k]) and summary[k] >= 0, (name, k)

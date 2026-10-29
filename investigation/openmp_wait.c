@@ -43,11 +43,15 @@ static inline void relax_cpu(void) {
 #endif
 }
 int main(int argc, char **argv) {
-    if (argc > 1 && !strcmp(argv[1], "spin")) {
+    if (argc > 1 && (!strcmp(argv[1], "spin") || !strcmp(argv[1], "spin-nopause"))) {
         volatile int flag = 0;
         const long count = 30000000;
         double wall = clock_s(CLOCK_MONOTONIC), cpu = clock_s(CLOCK_THREAD_CPUTIME_ID);
-        for (long i=0; i<count; ++i) { if (flag) break; relax_cpu(); }
+        if (!strcmp(argv[1], "spin-nopause")) {
+            for (long i=0; i<count; ++i) { if (flag) break; __asm__ volatile("" ::: "memory"); }
+        } else {
+            for (long i=0; i<count; ++i) { if (flag) break; relax_cpu(); }
+        }
         cpu = clock_s(CLOCK_THREAD_CPUTIME_ID) - cpu;
         wall = clock_s(CLOCK_MONOTONIC) - wall;
         printf("{\"iterations\":%ld,\"cpu_s\":%.9f,\"wall_s\":%.9f,\"ns_per_spin\":%.3f}\n", count, cpu, wall, cpu*1e9/count);
