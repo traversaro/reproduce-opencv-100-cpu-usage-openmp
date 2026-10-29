@@ -187,3 +187,5 @@ always goes to `results/` unless explicitly overridden.
 The [fixed-team spin-count investigation](investigation/README.md) compares resize, grayscale, and a standalone OpenMP C reproducer on both architectures, with repeated samples and worker CPU accounting.
 
 [CI investigation results](investigation/RESULTS.md) include fixed-team spin sweeps, a control on two distinct physical cores, and an intervention that isolates the x86 PAUSE instruction cost.
+
+The [research log](investigation/RESEARCH_LOG.md) records the questions, experimental rationale, corrections, evidence and remaining uncertainties. The [GNU/LLVM comparison](investigation/RUNTIME_COMPARISON.md) includes pinned upstream code, related issues and the separately reported local LLVM check.

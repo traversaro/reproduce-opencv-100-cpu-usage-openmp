@@ -86,3 +86,8 @@ large debug sections at virtual address zero cannot overlap the code mapping.
 ## Measured results
 
 See [the CI analysis and tables](RESULTS.md) and [retained individual measurements](measurements/2026-10-29.json).
+
+## Research narrative and runtime references
+
+- [Research log and conclusions](RESEARCH_LOG.md)
+- [GNU/LLVM source, issue search and local runtime observations](RUNTIME_COMPARISON.md)

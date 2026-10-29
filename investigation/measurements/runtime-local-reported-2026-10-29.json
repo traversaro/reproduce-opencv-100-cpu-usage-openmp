@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "evidence_kind": "reported_local_medians",
+  "raw_samples_retained": false,
+  "limitation": "Transcribed from earlier execution output; original per-repetition raw samples and temporary binaries unavailable at documentation time; no rerun performed for this documentation.",
+  "date_recorded": "2026-10-29",
+  "execution_location": "authoring environment, not GitHub Actions",
+  "machine": "x86_64",
+  "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+  "affinity": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "cgroup_cpu_max": "800000 100000",
+  "llvm_package": {
+    "channel": "conda-forge",
+    "name": "llvm-openmp",
+    "version": "23.1.4",
+    "build": "h7148c6a_0"
+  },
+  "gnu_runtime_version": "16.2.0",
+  "llvm_linkage": "GCC-generated OpenMP object linked against libomp GNU ABI compatibility entry points; ldd showed libomp without libgomp",
+  "team_size": 4,
+  "target_fps": 30,
+  "duration_s": 2,
+  "warmup_s": 0.5,
+  "repetitions_per_setting": 3,
+  "percent_denominator": "full measurement wall interval; 100% = one logical CPU",
+  "reported_medians": [
+    {
+      "runtime": "llvm",
+      "case": "default",
+      "cpu_percent": 300.18,
+      "sleep_worker_cpu_percent": 299.48
+    },
+    {
+      "runtime": "llvm",
+      "case": "KMP_BLOCKTIME=0",
+      "cpu_percent": 0.6,
+      "sleep_worker_cpu_percent": 0.01
+    },
+    {
+      "runtime": "llvm",
+      "case": "KMP_BLOCKTIME=1",
+      "cpu_percent": 9.74,
+      "sleep_worker_cpu_percent": 9.02
+    },
+    {
+      "runtime": "llvm",
+      "case": "KMP_BLOCKTIME=10",
+      "cpu_percent": 90.64,
+      "sleep_worker_cpu_percent": 89.87
+    },
+    {
+      "runtime": "llvm",
+      "case": "OMP_WAIT_POLICY=PASSIVE",
+      "cpu_percent": 0.62,
+      "sleep_worker_cpu_percent": 0.01
+    },
+    {
+      "runtime": "llvm",
+      "case": "OMP_WAIT_POLICY=ACTIVE",
+      "cpu_percent": 300.34,
+      "sleep_worker_cpu_percent": 298.94
+    },
+    {
+      "runtime": "gnu",
+      "case": "default",
+      "cpu_percent": 76.26,
+      "sleep_worker_cpu_percent": 74.84
+    },
+    {
+      "runtime": "gnu",
+      "case": "GOMP_SPINCOUNT=0",
+      "cpu_percent": 0.57,
+      "sleep_worker_cpu_percent": 0.09
+    }
+  ]
+}
