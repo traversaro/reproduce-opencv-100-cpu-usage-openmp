@@ -1,0 +1,48 @@
+name: Investigate OpenMP spin waiting
+on:
+  push:
+    branches: [main]
+    paths: ['investigation/**', 'repro.py', '.github/workflows/spin-sweep.yml']
+  pull_request:
+    paths: ['investigation/**', 'repro.py', '.github/workflows/spin-sweep.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sweep:
+    name: Spin sweep / ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: prefix-dev/setup-pixi@a0af7a228712d6121d37aba47adf55c1332c9c2e # v0.9.4
+        with:
+          pixi-version: v0.83.0
+          manifest-path: source-build/pixi.toml
+          environments: openmp
+          cache-key: opencv-source-openmp-
+          locked: true
+      - name: Compile standalone reproducer against the selected libgomp
+        run: |
+          mkdir -p results/spin-sweep
+          gcc --version | tee results/spin-sweep/compiler.txt
+          pixi run --locked --manifest-path source-build/pixi.toml -e openmp bash -c 'gcc -O2 -Wall -Wextra -Werror -fopenmp "$GITHUB_WORKSPACE/investigation/openmp_wait.c" -L"$CONDA_PREFIX/lib" -Wl,-rpath,"$CONDA_PREFIX/lib" -lm -o "$GITHUB_WORKSPACE/results/spin-sweep/openmp_wait"'
+          ldd results/spin-sweep/openmp_wait | tee results/spin-sweep/native-ldd.txt
+          objdump -d results/spin-sweep/openmp_wait > results/spin-sweep/native-disassembly.txt
+          pixi run --locked --manifest-path source-build/pixi.toml -e openmp bash -c 'objdump -d "$CONDA_PREFIX/lib/libgomp.so.1"' > results/spin-sweep/libgomp-disassembly.txt
+      - name: Sweep spin counts with fixed teams and three repetitions
+        run: |
+          pixi run --locked --manifest-path source-build/pixi.toml -e openmp python "$GITHUB_WORKSPACE/investigation/sweep.py" --native "$GITHUB_WORKSPACE/results/spin-sweep/openmp_wait" --output "$GITHUB_WORKSPACE/results/spin-sweep"
+          cat results/spin-sweep/comparison.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: spin-sweep-${{ matrix.runner }}
+          path: results/spin-sweep/
+          retention-days: 30

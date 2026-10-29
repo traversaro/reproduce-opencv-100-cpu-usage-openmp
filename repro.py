@@ -37,6 +37,7 @@ def case_environment(case, inherit=False):
 
 def parser():
     p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--threads", type=int, help="Explicit OpenCV team size (before warmup)")
     p.add_argument("--suite", action="store_true", help="Run all five diagnostic cases")
     p.add_argument("--case", choices=(*CASES, "active"), default="default")
     p.add_argument("--include-active", action="store_true", help="Add forced ACTIVE wait positive control")
@@ -117,9 +118,11 @@ def run_periodic(operation, duration, fps, proc, measure):
     period = 1.0 / fps
     start = last_wall = time.perf_counter()
     start_cpu = last_cpu = time.process_time()
+    start_caller = time.thread_time()
     next_frame = start
     frames = misses = 0
     operation_wall = operation_cpu = wait_wall = wait_cpu = 0.0
+    sleep_caller_cpu = 0.0
     peak_threads = proc.num_threads()
     timeline = []
     while time.perf_counter() < start + duration:
@@ -135,7 +138,9 @@ def run_periodic(operation, duration, fps, proc, measure):
             peak_threads = max(peak_threads, proc.num_threads())
         # process_time counts *all* native threads, even while this Python thread sleeps.
         a, ca = time.perf_counter(), time.process_time()
+        caller_a = time.thread_time()
         time.sleep(max(0.0, min(next_frame, start + duration) - a))
+        sleep_caller_cpu += time.thread_time() - caller_a
         b, cb = time.perf_counter(), time.process_time()
         wait_wall += b - a
         wait_cpu += cb - ca
@@ -145,7 +150,10 @@ def run_periodic(operation, duration, fps, proc, measure):
             last_wall, last_cpu = b, cb
     wall = time.perf_counter() - start
     cpu = time.process_time() - start_cpu
+    caller_cpu = time.thread_time() - start_caller
     return {
+        "caller_cpu_s": caller_cpu, "worker_cpu_s": max(0.0, cpu - caller_cpu),
+        "sleep_worker_cpu_s": max(0.0, wait_cpu - sleep_caller_cpu),
         "wall_s": wall, "cpu_s": cpu, "cpu_percent": 100 * cpu / wall,
         "cpu_cores_equivalent": cpu / wall, "frames": frames, "actual_fps": frames / wall,
         "deadline_misses": misses, "operation_wall_s": operation_wall,
@@ -167,6 +175,8 @@ def worker(args):
     stages["after_numpy"] = proc.num_threads()
     import cv2
     stages["after_cv2"] = proc.num_threads()
+    if args.threads is not None:
+        cv2.setNumThreads(args.threads)
     if args.case == "single":
         cv2.setNumThreads(1)
     operation = make_operation(args, np, cv2)
@@ -180,7 +190,7 @@ def worker(args):
     top_threads = sorted(({"tid": t.id, "cpu_s": t.user_time + t.system_time - before_threads.get(t.id, 0)}
                           for t in proc.threads()), key=lambda t: t["cpu_s"], reverse=True)
     result = {"case": args.case, "label": args.label,
-              "settings": {k: getattr(args, k) for k in ("operation", "fps", "width", "height", "duration", "warmup", "inherit_thread_env")},
+              "settings": {k: getattr(args, k) for k in ("operation", "fps", "width", "height", "duration", "warmup", "inherit_thread_env", "threads")},
               "thread_stages": stages, "runtime": metadata,
               "summary": summary, "top_threads": top_threads[:32]}
     cpu_stat = Path("/sys/fs/cgroup/cpu.stat")
@@ -206,6 +216,8 @@ def worker(args):
 def main():
     p = parser()
     args = p.parse_args()
+    if args.threads is not None and args.threads < 1:
+        p.error("threads must be positive")
     if args.duration <= 0 or args.warmup < 0 or args.fps <= 0 or min(args.width, args.height) < 2:
         p.error("duration/fps must be positive, warmup nonnegative, and dimensions >= 2")
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-" for c in args.label):
@@ -221,6 +233,8 @@ def main():
                "--label", args.label, "--operation", args.operation, "--duration", str(args.duration),
                "--warmup", str(args.warmup), "--fps", str(args.fps), "--width", str(args.width),
                "--height", str(args.height), "--output-dir", str(args.output_dir)]
+        if args.threads is not None:
+            cmd.extend(["--threads", str(args.threads)])
         if args.inherit_thread_env:
             cmd.append("--inherit-thread-env")
         subprocess.run(cmd, env=case_environment(case, args.inherit_thread_env), check=True)

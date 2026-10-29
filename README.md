@@ -183,3 +183,5 @@ is actually spinning.
 The archive's `validation/` directory, if present, contains results measured in
 the authoring environment and a note describing their limits. Your own output
 always goes to `results/` unless explicitly overridden.
+
+The [fixed-team spin-count investigation](investigation/README.md) compares resize, grayscale, and a standalone OpenMP C reproducer on both architectures, with repeated samples and worker CPU accounting.
