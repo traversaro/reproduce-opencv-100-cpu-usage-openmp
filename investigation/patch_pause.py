@@ -23,9 +23,11 @@ def main():
     if platform.machine() == "x86_64":
         headers = subprocess.check_output(["objdump", "-h", str(source)], text=True)
         sections = []
-        for line in headers.splitlines():
+        header_lines = headers.splitlines()
+        for index, line in enumerate(header_lines):
             fields = line.split()
-            if len(fields) >= 7 and fields[0].isdigit():
+            if (len(fields) >= 7 and fields[0].isdigit() and index + 1 < len(header_lines)
+                    and "CODE" in header_lines[index + 1] and "ALLOC" in header_lines[index + 1]):
                 sections.append((fields[1], int(fields[3], 16), int(fields[2], 16), int(fields[5], 16)))
         disasm = subprocess.check_output(["objdump", "-d", str(source)], text=True)
         for line in disasm.splitlines():

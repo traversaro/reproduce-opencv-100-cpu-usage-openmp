@@ -21,6 +21,14 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
+          fetch-depth: 2
+      - name: Select full sweep or focused runtime control
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = push ] && ! git diff --name-only HEAD^ HEAD | rg -q '^(repro.py|investigation/(openmp_wait.c|sweep.py))$'; then
+            echo 'CONTROL_ONLY=1' >> "$GITHUB_ENV"
+          else
+            echo 'CONTROL_ONLY=0' >> "$GITHUB_ENV"
+          fi
       - uses: prefix-dev/setup-pixi@a0af7a228712d6121d37aba47adf55c1332c9c2e # v0.9.4
         with:
           pixi-version: v0.83.0
@@ -36,9 +44,11 @@ jobs:
           ldd results/spin-sweep/openmp_wait | tee results/spin-sweep/native-ldd.txt
           objdump -d results/spin-sweep/openmp_wait > results/spin-sweep/native-disassembly.txt
           pixi run --locked --manifest-path source-build/pixi.toml -e openmp bash -c 'objdump -d "$CONDA_PREFIX/lib/libgomp.so.1"' > results/spin-sweep/libgomp-disassembly.txt
-      - name: Sweep spin counts with fixed teams and three repetitions
+      - name: Measure original runtime with three repetitions
         run: |
-          pixi run --locked --manifest-path source-build/pixi.toml -e openmp python "$GITHUB_WORKSPACE/investigation/sweep.py" --native "$GITHUB_WORKSPACE/results/spin-sweep/openmp_wait" --output "$GITHUB_WORKSPACE/results/spin-sweep"
+          sweep_args=()
+          if [ "$CONTROL_ONLY" = 1 ]; then sweep_args+=(--control-only); fi
+          pixi run --locked --manifest-path source-build/pixi.toml -e openmp python "$GITHUB_WORKSPACE/investigation/sweep.py" --native "$GITHUB_WORKSPACE/results/spin-sweep/openmp_wait" --output "$GITHUB_WORKSPACE/results/spin-sweep" "${sweep_args[@]}"
           cat results/spin-sweep/comparison.md >> "$GITHUB_STEP_SUMMARY"
       - name: Test a private runtime copy with x86 PAUSE replaced by NOP
         run: |

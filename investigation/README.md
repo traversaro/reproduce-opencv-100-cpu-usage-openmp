@@ -76,3 +76,9 @@ OpenMP threads to those two CPU places. Default, explicit 300000, and zero spins
 are measured three times for all three workloads. libgomp's verbose environment
 and affinity display are saved for every child. This matches the topology
 exposed by the VMs; it cannot establish exclusive use of underlying host cores.
+
+For runtime-patcher-only changes, the spin workflow repeats the focused
+four-thread default/300000/zero comparison before testing the private copy.
+Changes to the measured C/Python programs, manual dispatches and PRs run the full
+spin sweep. Executable ELF sections are selected by CODE and ALLOC flags so that
+large debug sections at virtual address zero cannot overlap the code mapping.
