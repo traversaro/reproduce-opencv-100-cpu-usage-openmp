@@ -82,3 +82,7 @@ four-thread default/300000/zero comparison before testing the private copy.
 Changes to the measured C/Python programs, manual dispatches and PRs run the full
 spin sweep. Executable ELF sections are selected by CODE and ALLOC flags so that
 large debug sections at virtual address zero cannot overlap the code mapping.
+
+## Measured results
+
+See [the CI analysis and tables](RESULTS.md) and [retained individual measurements](measurements/2026-10-29.json).

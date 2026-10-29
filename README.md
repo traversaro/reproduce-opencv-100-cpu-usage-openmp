@@ -185,3 +185,5 @@ the authoring environment and a note describing their limits. Your own output
 always goes to `results/` unless explicitly overridden.
 
 The [fixed-team spin-count investigation](investigation/README.md) compares resize, grayscale, and a standalone OpenMP C reproducer on both architectures, with repeated samples and worker CPU accounting.
+
+[CI investigation results](investigation/RESULTS.md) include fixed-team spin sweeps, a control on two distinct physical cores, and an intervention that isolates the x86 PAUSE instruction cost.
